@@ -3,6 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org/}
+        HTTP_PROXY: ${HTTP_PROXY_URL:-}
+        HTTPS_PROXY: ${HTTPS_PROXY_URL:-}
+        NO_PROXY: ${NO_PROXY:-}
     container_name: lur-web
     ports:
       - "5173:5173"
@@ -16,6 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org/}
     container_name: lur-web-prod
     ports:
       - "8080:80"

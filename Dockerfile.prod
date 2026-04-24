@@ -2,8 +2,21 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+ARG NPM_REGISTRY=https://registry.npmjs.org/
+RUN apk add --no-cache ca-certificates && update-ca-certificates
+
+ENV npm_config_registry=${NPM_REGISTRY}
+ENV npm_config_cafile=/etc/ssl/certs/ca-certificates.crt
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+ENV npm_config_fetch_retries=5
+ENV npm_config_fetch_retry_mintimeout=20000
+ENV npm_config_fetch_retry_maxtimeout=120000
+ENV npm_config_fetch_timeout=300000
+ENV npm_config_audit=false
+ENV npm_config_fund=false
+
 COPY package*.json ./
-RUN npm install
+RUN npm install --prefer-online
 
 COPY . .
 RUN npm run build
